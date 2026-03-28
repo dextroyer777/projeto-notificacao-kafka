@@ -1,35 +1,34 @@
 # 🚀 Sistema de Notificações Assíncronas (Event-Driven)
 
-Este projeto é um ecossistema de microserviços desenvolvido para demonstrar alta performance, resiliência e escalabilidade no processamento de notificações, utilizando as tecnologias mais modernas do ecossistema Java e infraestrutura containerizada.
+Este projeto demonstra uma arquitetura moderna de microserviços para processamento de notificações em alta escala, utilizando o **Spring Boot 4.0.5** e as capacidades nativas do **Java 21**.
 
 ## 🛠 Tecnologias e Conceitos
-* **Java 21**: Aproveitando o poder das **Virtual Threads** (Project Loom) para concorrência leve e eficiente.
-* **Spring Boot 3.x**: Framework base para injeção de dependências e integração de serviços.
-* **Apache Kafka**: Message Broker utilizado para desacoplamento de serviços e garantia de entrega de mensagens.
-* **Redis**: Cache de alta performance utilizado para armazenamento de estado (Check-point) e redução de latência.
-* **Docker & Docker Compose**: Orquestração de containers para garantir uma infraestrutura imutável e reprodutível.
+* **Java 21**: Foco total em **Virtual Threads** (Project Loom) para escalabilidade massiva com baixo overhead de memória.
+* **Spring Boot 4.0.5**: Utilização da versão mais recente do framework para gerenciamento de dependências e auto-configuração otimizada.
+* **Apache Kafka**: Broker de mensagens para garantir o desacoplamento e a entrega resiliente.
+* **Redis**: Cache de baixa latência para controle de estado e idempotência.
+* **Lombok**: Produtividade no desenvolvimento através da redução de boilerplate.
+* **Docker & Docker Compose**: Padronização do ambiente de execução e infraestrutura.
 
 ---
 
 ## 🏗 Arquitetura do Sistema
 
-O sistema opera sob o modelo de **Consistência Eventual** e comunicação assíncrona:
-1.  **API (Producer)**: Recebe uma notificação via endpoint REST e a publica imediatamente no tópico do Kafka.
-2.  **Broker (Kafka)**: Garante a durabilidade do evento, permitindo que a mensagem seja consumida no tempo do worker.
-3.  **Worker (Consumer)**: Consome a mensagem, processa a lógica de negócio e registra o status final no **Redis**.
-
-
+O fluxo de dados foi desenhado para ser totalmente assíncrono:
+1.  **API (Producer)**: Recebe a notificação e delega a persistência ao Kafka.
+2.  **Broker (Kafka)**: Armazena o evento de forma durável.
+3.  **Worker (Consumer)**: Processa a lógica de negócio e sincroniza o status final no **Redis**.
 
 ---
 
-## 🚦 Como Executar o Projeto no openSUSE
+## 🚦 Como Executar no openSUSE
 
 ### 1. Pré-requisitos
-* Docker e Docker Compose instalados e configurados.
-* Java 21 (JDK) instalado.
-* Maven (ou uso do `./mvnw` incluso no repositório).
+* Docker / Docker Compose.
+* JDK 21.
+* Maven (Wrapper `./mvnw` incluso).
 
-### 2. Subir a Infraestrutura
-Na raiz do projeto (onde está o arquivo `docker-compose.yml`), execute:
+### 2. Infraestrutura
+Inicie os serviços de suporte (Kafka e Redis):
 ```bash
 docker-compose up -d
