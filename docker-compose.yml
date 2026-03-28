@@ -1,13 +1,10 @@
 services:
-  # O Cache para evitar notificações duplicadas
   redis:
     image: redis:7-alpine
     container_name: redis-cache
     ports:
       - "6379:6379"
 
-  # O Mensageiro (Zookeeper é necessário para versões mais antigas do Kafka, 
-  # mas aqui usaremos a imagem da Confluent que simplifica o setup)
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     environment:
@@ -23,14 +20,12 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      # Aqui está a mágica: separa o tráfego interno do externo
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: EXTERNAL:PLAINTEXT,INTERNAL:PLAINTEXT
       KAFKA_ADVERTISED_LISTENERS: EXTERNAL://localhost:9092,INTERNAL://kafka:29092
       KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_HEAP_OPTS: "-Xmx512M -Xms512M"
 
-  # Interface visual para você ver as mensagens chegando no Kafka (Estudo)
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     container_name: kafka-ui
