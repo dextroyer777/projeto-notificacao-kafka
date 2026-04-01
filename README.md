@@ -32,3 +32,25 @@ O fluxo de dados foi desenhado para ser totalmente assíncrono:
 Inicie os serviços de suporte (Kafka e Redis):
 ```bash
 docker-compose up -d
+```
+
+## Arquitetura do Microserviço de Notificação
+
+Este projeto utiliza o padrão C4 Model para descrever a infraestrutura.
+
+```mermaid
+graph TD
+    subgraph "Componentes do Microserviço de Notificação"
+        Consumer[Kafka Consumer\n@KafkaListener]
+        Dispatcher[Notification Dispatcher\nSpring Service]
+        Strategy[Notification Strategy Factory]
+        
+        EmailAdapter[Email Adapter\nJavaMailSender]
+        SMSAdapter[SMS Adapter\nExternal API Client]
+
+        Consumer --> Dispatcher
+        Dispatcher --> Strategy
+        Strategy --> EmailAdapter
+        Strategy --> SMSAdapter
+    end
+```
